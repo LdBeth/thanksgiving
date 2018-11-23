@@ -9,8 +9,9 @@ for [Emacspeak](http://emacspeak.sourceforge.net). Currently very alpha.
 # First start festival in server mode.
 festival --server
 # start tksgiv will auto connect to port 1314
-# currently port number is hard coded
 ./tksgiv
+# or
+./tksgiv 127.0.0.1 1314
 # type some commands, such as `tts_say Yes my lord'
 # To quit, just Ctrl-D
 ```
