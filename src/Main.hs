@@ -84,13 +84,14 @@ dispatch (p,s) (c,a) =
         speak f [] = return ()
         speak f t  = when (lMode s) (cancel p)
                      >> toFestival ("(tts_text \"<SABLE>"
-                                    ++ f t
+                                    ++ f (escape t)
                                     ++ "</SABLE>\" 'sable)") p
 
-
+escape :: String -> String
+escape = replace "\"" "\\\""
 
 say :: String -> String
-say = replace "\"" "\\\"" . replace "[*]" " "
+say =  replace "[*]" " "
 
 letter :: String -> String
 letter x = "<SAYAS MODE=\\\"literal\\\">" ++

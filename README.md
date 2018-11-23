@@ -11,6 +11,7 @@ festival --server
 # start tksgiv will auto connect to port 1314
 # currently port number is hard coded
 ./tksgiv
+# To quit, just Ctrl-D
 ```
 
 Currently only implemented a few of commands from http://tvraman.github.io/emacspeak/manual/TTS-Servers.html#TTS-Servers
