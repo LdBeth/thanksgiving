@@ -15,9 +15,11 @@ import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Catch (MonadMask)
 import Network.Simple.TCP
 
+import Args
 import Parse
 
-server = connect "localhost" "1314"
+server :: ((Socket, SockAddr) -> IO ()) -> IO ()
+server c = initArg >>= (\(a , b) -> connect a b c)
 
 process :: (Socket -> IO ()) -> IO ()
 process p = server (\ (s,a) -> putStrLn ( "Connected to " ++ show a)
@@ -27,8 +29,6 @@ process p = server (\ (s,a) -> putStrLn ( "Connected to " ++ show a)
 toFestival :: Socket -> String -> IO ()
 toFestival s x = send s $ pack x
 
-version :: String
-version = "0.1.0.0"
 
 
 data Context = Context
@@ -77,7 +77,7 @@ dispatch (p,s) (c,a) =
           case c of
             "tts_say" -> speak say a
             "a"       -> speak playSound a
-            "version" -> speak say $ "Thanksgiving version " ++ version
+            "version" -> speak say version
             _         -> putStrLn ( "unknown command: " ++ c)
         speak :: (String -> String) -> String -> IO ()
         speak f [] = return ()
