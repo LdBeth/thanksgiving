@@ -8,7 +8,6 @@ module Main where
 
 
 import Data.Char (isSpace)
-import Data.String.Utils (replace)
 import System.IO (isEOF,Handle,stdout,hPutStrLn)
 import Control.Monad (when)
 import Data.ByteString.Char8 (pack, unpack)
@@ -16,7 +15,8 @@ import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Catch (MonadMask)
 import Network.Simple.TCP
 
---server :: ((Socket, SockAddr) -> IO Socket) -> IO Socket
+import Parse
+
 server = connect "localhost" "1314"
 
 process :: (Socket -> IO ()) -> IO ()
@@ -24,10 +24,8 @@ process p = server (\ (s,a) -> putStrLn ( "Connected to " ++ show a)
                          >> p s
                          >> return ())
 
-toFestival ::  String -> Socket -> IO ()
-toFestival x s = send s $ pack x
---toFestival = undefined
-
+toFestival :: Socket -> String -> IO ()
+toFestival s x = send s $ pack x
 
 version :: String
 version = "0.1.0.0"
@@ -71,33 +69,22 @@ dispatch (p,s) (c,a) =
   case c of
     "tts_set_speech_rate" ->   return s { rate  = read a / 225 }
     "l"   -> speak letter a >> return s { lMode = True }
-    "s"   -> cancel p >> return s { lMode = False, queue = [] }
+    "s"   -> cancel >> return s { lMode = False, queue = [] }
     "q" -> return s { queue = a : queue s}
     "d" -> mapM_ (speak say) (reverse (queue s)) >> return s { queue = [] }
     _ -> dispatch' >> return s { lMode = False }
   where dispatch' =
           case c of
             "tts_say" -> speak say a
+            "a"       -> speak playSound a
             "version" -> speak say $ "Thanksgiving version " ++ version
             _         -> putStrLn ( "unknown command: " ++ c)
         speak :: (String -> String) -> String -> IO ()
         speak f [] = return ()
-        speak f t  = when (lMode s) (cancel p)
-                     >> toFestival ("(tts_text \"<SABLE>"
-                                    ++ f (escape t)
-                                    ++ "</SABLE>\" 'sable)") p
+        speak f t  = when (lMode s) cancel
+                     >> toFestival p (format f t)
+        cancel = toFestival p "(audio_mode 'shutup)"
 
-escape :: String -> String
-escape = replace "\"" "\\\""
-
-say :: String -> String
-say =  replace "[*]" " "
-
-letter :: String -> String
-letter x = "<SAYAS MODE=\\\"literal\\\">" ++
-           x ++ "</SAYAS>"
-
-cancel = toFestival "(audio_mode 'shutup)"
 
 main :: IO ()
 main = process (\ p -> listener p defaultArg)
