@@ -71,7 +71,7 @@ dispatch (p,s) (c,a) =
   case c of
     "tts_set_speech_rate" ->   return s { rate  = read a / 225 }
     "l"   -> speak letter a >> return s { lMode = True }
-    "s"   -> cancel p >> return s { lMode = False }
+    "s"   -> cancel p >> return s { lMode = False, queue = [] }
     "q" -> return s { queue = a : queue s}
     "d" -> mapM_ (speak say) (reverse (queue s)) >> return s { queue = [] }
     _ -> dispatch' >> return s { lMode = False }
