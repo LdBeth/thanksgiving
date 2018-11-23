@@ -8,7 +8,7 @@ module Main where
 
 
 import Data.Char (isSpace)
-import System.IO (isEOF,Handle,stdout,hPutStrLn)
+import System.IO (isEOF)
 import Control.Monad (when)
 import Data.ByteString.Char8 (pack, unpack)
 import Control.Monad.IO.Class (MonadIO)

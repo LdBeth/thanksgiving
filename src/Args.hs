@@ -12,8 +12,6 @@ usage = putStrLn "Usage: tksgiv [-vh] [hostname] [port]"
 
 initArg :: IO (String, String)
 initArg = getArgs >>= parse
--- (hostname, port) =  getArgs >>= parse
-
 
 parse :: [String] -> IO (String, String)
 parse ["-h"] = usage >> exitWith ExitSuccess
