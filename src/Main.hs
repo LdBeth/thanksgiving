@@ -11,8 +11,6 @@ import Data.Char (isSpace)
 import System.IO (isEOF)
 import Control.Monad (when)
 import Data.ByteString.Char8 (pack, unpack)
-import Control.Monad.IO.Class (MonadIO)
-import Control.Monad.Catch (MonadMask)
 import Network.Simple.TCP
 
 import Args
@@ -37,9 +35,9 @@ data Context = Context
                , lMode :: Bool
                }
 
-defaultArg = Context {queue = []
-                     , rate = 1 -- they said this is reasonable
-                     , lMode = False}
+initParmameter = Context {queue = []
+                         , rate = 1 -- they said this is reasonable
+                         , lMode = False}
 
 listener :: Socket -> Context -> IO ()
 listener p s = isEOF >>=
@@ -53,7 +51,7 @@ listener p s = isEOF >>=
                                >> return s
                     Just x  -> dispatch (p,s) x
 
-type Command = String
+type Command  = String
 type Argument = String
 
 commandWord :: String -> Maybe (Command, Argument)
@@ -87,4 +85,4 @@ dispatch (p,s) (c,a) =
 
 
 main :: IO ()
-main = process (\ p -> listener p defaultArg)
+main = process (`listener` initParmameter)
