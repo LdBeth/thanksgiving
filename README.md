@@ -3,6 +3,10 @@
 This is a [festival](http://www.cstr.ed.ac.uk/projects/festival/) based speech server
 for [Emacspeak](http://emacspeak.sourceforge.net). Currently very alpha.
 
+## Howe to build?
+
+Get [stack](haskellstack.org) and do `stack build`.
+
 ## How to use?
 
 ```
