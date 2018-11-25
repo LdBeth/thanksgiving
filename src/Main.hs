@@ -13,7 +13,7 @@ import Control.Monad (when)
 import Data.ByteString.Char8 (pack, unpack)
 import Network.Simple.TCP
 
-import Args
+import Cmdline
 import Parse
 
 server :: ((Socket, SockAddr) -> IO ()) -> IO ()

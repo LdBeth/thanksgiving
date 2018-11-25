@@ -24,7 +24,6 @@ dependencies:
 - MissingH
 - network-simple >= 0.4.3
 - bytestring
-- exceptions
 
 library:
   source-dirs: src

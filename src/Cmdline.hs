@@ -1,4 +1,4 @@
-module Args
+module Cmdline
   (initArg
   ,version) where
 
