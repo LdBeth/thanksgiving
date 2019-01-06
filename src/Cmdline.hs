@@ -14,8 +14,8 @@ initArg :: IO (String, String)
 initArg = getArgs >>= parse
 
 parse :: [String] -> IO (String, String)
-parse ["-h"] = usage >> exitWith ExitSuccess
-parse ["-v"] = putStrLn version >> exitWith ExitSuccess
+parse ["-h"] = usage >> exitSuccess
+parse ["-v"] = putStrLn version >> exitSuccess
 parse []     = return ("localhost", "1314")
 parse [a,b]  = return (a,b)
 parse _ = putStrLn "Unknown arguments."
